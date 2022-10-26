@@ -2,7 +2,7 @@
 
 This is the implementation of 'Skilful Weather Nowcasting by Evolution-Similarity Contrastive Learning' submitted for peer review.
 
-![image](https://github.com/Anonymous-Submission-ID/Anonymous-Submission/blob/main/separating_active_patterns/figs/Figure%202.png)
+![image](https://github.com/tolearnmuch/ESCL/blob/main/logdir/Figure%201.3.png)
 
 ## 1. Important updates
 
