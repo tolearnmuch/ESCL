@@ -16,74 +16,81 @@ The requirements of the hardware and software are given as below.
 
 ### 2.1. Prerequisites
 
-> CPU: Intel(R) Core(TM) i7-6900K CPU @ 3.20GHz
+> CPU: Intel(R) Xeon(R) Gold 6248R CPU @ 3.00GHz 2.99 GHz (2 CPUs)
 >
-> GPU: GeForce GTX 1080 Ti
+> GPU: GeForce GTX 3090 x 4
 > 
-> CUDA Version: 10.2
+> CUDA Version: 11.6
 > 
-> OS: Ubuntu 16.04.6 LTS
+> OS: Windows 10
 
 ### 2.2. Installing
 
-Configure the virtual environment on Ubuntu.
+Configure the virtual environment on Windows.
 
-* Create a virtual with python 3.6
-
-```
-conda create -n asvp python=3.6
-conda activate asvp
-```
-
-* Install requirements (Please pay attention that we use tensorflow-gpu==1.10.0)
+* Dependencies on Anaconda
 
 ```
-pip install -r requirements.txt
+python >= 3.6
+pytorch >= 1.6
+torchvision >= 0.7.0
+tensorboard
+imageio
+tqdm
+opencv-python
+pillow
+scikit-image
+matplotlib
+einops
 ```
-
-* Additionally install ffmpeg
-
-```
-conda install x264 ffmpeg -c conda-forge
-```
-
-Here the virtual env is created on Ubuntu.
 
 ### 2.3. Dataset
 
-Datasets contain: [KTH human action dataset](https://www.csc.kth.se/cvap/actions/) & [BAIR action-free robot pushing dataset](https://sites.google.com/view/sna-visual-mpc/). For reproducing the experiment, the processed dataset should be downloaded:
+Datasets contain: [Shanghai-2020](https://doi.org/10.5281/zenodo.7251972) & [HKO-7](https://github.com/sxjscience/HKO-7)
 
-* For KTH, raw data and subsequence file should be downloaded firstly. In this turn of submission, please temporarily download from:
+For reproducing our experiments, the pre-precessing should be done at first.
 
-[raw data](https://mega.nz/folder/JREhlAKB#U26ufSZcVSiw0EOOlW6pMw) and [subsequence file](https://mega.nz/folder/EVMiRJhB#Gboh1r5PmbqGv97db2974w). After downloading, drag all .zip and .tar.gz files into ./data directory, and run
-
-```
-bash data/preprocess_kth.sh
-```
-
-Then all preprocessed and subsequence splitted frames are obtained in ./data/kth/processed.
-
-* If you only need to inference with released models, please run the code below for converting images into tfrecords for inference
+* For Shanghai-2020:
 
 ```
-bash data/kth2tfrecords.sh 
+python Shanghai_2020_preprocessing.py
 ```
 
-else, please skip this step and turn to Part 3 for separating active patterns along with non-active ones from videos.
-
-## 3. Active pattern mining
-
-Active pattern mining is necessary only for training and there is no need to do this if only with respective to inference with released model.
-
-* When trying to separate active patterns along with non-active ones from videos, please refer to [details](https://github.com/Anonymous-Submission-ID/Anonymous-Submission/tree/main/separating_active_patterns/).
-
-* After all active patters and non-active patterns are mined, these images are convertted to tfrecords for training.
+The structure of Shanghai-2020 should be:
 
 ```
-bash data/kth2tfrecords_ap.sh
+-test/
+  -data/
+  -examples/
+-train/
+  -data/
+  -examples/
 ```
 
-The final data could be downloaded from [drive](https://mega.nz/folder/VVlUiZII#kqCMjIRfCoS4IoOuMjTXZg/).
+* For HKO-7:
+
+```
+python HKO_7_preprocessing.py
+```
+
+The structure of HKO-7 should be:
+
+```
+-radarPNG/
+-radarPNG_mask/
+-hko7_rainy_test_days.txt
+-hko7_rainy_test_days_statistics.txt
+-hko7_rainy_train_days.txt
+-hko7_rainy_train_days_statistics.txt
+-hko7_rainy_valid_days.txt
+-hko7_rainy_valid_days_statistics.txt
+```
+
+* For examples on using dataset, please refer to https://github.com/tolearnmuch/ESCL/tree/main/dataset.
+
+## Inference with our trained ESCL on Shanghai-2020 & HKO-7
+
+Released pre-trained model is available on our [mega drive]()
 
 ## 4. Inference with released models
 
