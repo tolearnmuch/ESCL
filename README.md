@@ -6,13 +6,7 @@ This is the implementation of 'Skilful Weather Nowcasting by Evolution-Similarit
 
 ## 1. Important updates
 
-* 2022-04-01: This project is going to be released, please waiting.
-
-* 2022-04-03: The procedure of data preparation and proprecessing scripts on KTH are uploaded for inference.
-
-* 2022-04-04: Code of separating active patterns and non-active patterns from videos is uploaded.
-
-* 2022-04-06: Released models and code of inferencing and training are uploaded.
+* 2022-10-26: This project is going to be released, please waiting.
 
 * ...
 
