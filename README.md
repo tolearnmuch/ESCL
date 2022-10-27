@@ -8,7 +8,9 @@ This is the implementation of 'Skilful Weather Nowcasting by Evolution-Similarit
 
 * 2022-10-26: This project is going to be released, please waiting.
 
-* ...
+* 2022-10-27: Upoad released models, inferencing codes, training codes and supplemental materials
+
+* 2022-...
 
 ## 2. Getting started
 
@@ -88,69 +90,110 @@ The structure of HKO-7 should be:
 
 * For examples on using dataset, please refer to https://github.com/tolearnmuch/ESCL/tree/main/dataset.
 
-## Inference with our trained ESCL on Shanghai-2020 & HKO-7
+## 3. Inference with our trained ESCL on Shanghai-2020 & HKO-7
 
-Released pre-trained model is available on our [mega drive]()
+Released pre-trained model is available on our [mega drive](https://mega.nz/folder/lZ91CLhQ#yEpKYTeoj2RY9wAr9Kf-Fw).
 
-## 4. Inference with released models
-
-For downloading the [released models](https://mega.nz/folder/hA8mBKqA#WcSp7gl70OclmItphc7olA), the released models should be placed as:
-
->——./pretrained/pretrained_models/kth/ours_asvp
->
->——./pretrained/pretrained_models/bair_action_free/ours_asvp
-
-and the pre-trained models for baseline should be placed as:
-
->——./pretrained/pretrained_models/kth/savp
->
->——./pretrained/pretrained_models/bair_action_free/asvp
-
-### 4.1. Inference on KTH human action
-
-* For running our released model, please run
+* For do testing experiments on Shanghai-2020 & HKO-7, set parameters in configs.py and below is an example:
 
 ```
-CUDA_VISIBLE_DEVICES=0 python scripts/evaluate.py --input_dir data/kth --dataset_hparams sequence_length=30 --checkpoint pretrained_models/kth/ours_asvp/model-300000 --mode test --results_dir results_test_samples/kth --batch_size 3
+    mode = 'test' 
+    model = 'ESCL'
+    ini_mode = 'xavier'
+
+    dataset_type = 'HKO'  
+    dataset_root = r'D:\xyc\dataset\HKO-7'
+    #dataset_root = r'D:\xyc\dataset\competition'
+    #dataset_type = 'shanghai'
+
+    in_len = 10
+    out_len = 10
+
+    img_width = 128
+    img_height = 128
+    
+    pretrained_model = 'ESCL'
+
+    use_gpu = True
+    num_workers = 8
+    device_ids = [0,1,2,3]
+    device_ids_eval = [0]
+    batch_size = 4
+    test_batch_size = 1     # for save seqs, please set this one to be 1, and other cases could be like 4...
+    train_max_epoch = 20
+    learning_rate = 1e-4
+    optim_betas = (0.9, 0.999)
+    scheduler_gamma = 1.0
+
+    train_print_fre = 100
+    img_print_fre = 1000
+    model_save_fre = 1
+    log_dir = r'logdir'
+    model_save_dir = r'D:\xyc\PrecipNowcastingBench\Benchmark_Precipitation_Nowcasting\BPN-master\save_models'
+    test_imgs_save_dir = r'save_results'
 ```
 
-* For running the baseline, please run
+then place pre-trained models .pth files in $model_save_dir$. and run
 
 ```
-CUDA_VISIBLE_DEVICES=0 python scripts/evaluate.py --input_dir data/kth --dataset_hparams sequence_length=30 --checkpoint pretrained_models/kth/savp/model-300000 --mode test --results_dir results_test_samples/kth --batch_size 3
+python main.py
 ```
 
-### 4.2. Inference on BAIR action-free robot pushing
+## 4. Training your own models
 
-* For running our released model, please run
-
-```
-CUDA_VISIBLE_DEVICES=0 python scripts/evaluate.py --input_dir data/bair --dataset_hparams sequence_length=22 --checkpoint logs/bair_action_free/ours_asvp/model-300000 --mode test --results_dir results_test_samples/bair_action_free --batch_size 8
-```
-
-* For running the baseline, please run
+For training the models on Shanghai-2020 and HKO-7 datasets, set the parameters as in configs.py, and here is an example:
 
 ```
-CUDA_VISIBLE_DEVICES=0 python scripts/evaluate.py --input_dir data/bair --dataset_hparams sequence_length=22 --checkpoint pretrained_models/bair_action_free/savp/model-300000 --mode test --results_dir results_test_samples/bair_action_free --batch_size 8
+    mode = 'train'
+    model = 'ESCL'
+    ini_mode = 'xavier'
+
+    # dataset_type = 'HKO'
+    # dataset_root = r'D:\xyc\dataset\HKO-7'
+    dataset_root = r'D:\xyc\dataset\competition'
+    dataset_type = 'shanghai'
+
+    random_sampling = False
+    random_iters = 10000
+
+    in_len = 10
+    out_len = 10
+
+    img_width = 128
+    img_height = 128
+    #
+    fine_tune = False
+    pretrained_model = 'ESCL'
+
+    use_gpu = True
+    # num_workers = 8
+    num_workers = 8
+    device_ids = [0,1,2,3]
+    device_ids_eval = [0]
+    batch_size = 4
+    test_batch_size = 1     # for save seqs, please set this one to be 1, and other cases could be like 4...
+    train_max_epoch = 20
+    learning_rate = 1e-4
+    optim_betas = (0.9, 0.999)
+    scheduler_gamma = 1.0
+
+    train_print_fre = 100
+    img_print_fre = 1000
+    model_save_fre = 1
+    log_dir = r'logdir'
+    model_save_dir = r'D:\xyc\PrecipNowcastingBench\Benchmark_Precipitation_Nowcasting\BPN-master\save_models'
+    test_imgs_save_dir = r'save_results'
 ```
 
-## 5. Training
-
-* For training our model with active patterns and non-active patterns on KTH, please run
+then run
 
 ```
-CUDA_VISIBLE_DEVICES=0,1 python scripts/train.py --input_dir data/kth --dataset kth --model asvp --model_hparams_dict hparams/kth/ours_asvp/model_hparams.json --output_dir logs/kth/ours_asvp
-```
-
-* For training our model with active patterns and non-active patterns on BAIR action-free, please run
-
-```
-CUDA_VISIBLE_DEVICES=0,1 python scripts/train.py --input_dir data/bair --dataset bair --model asvp --model_hparams_dict hparams/bair_action_free/ours_asvp/model_hparams.json --output_dir logs/bair_action_free/ours_asvp
+python main.py
 ```
 
 ## 6. More cases
 
-Add additional notes about how to deploy this on a live system
+More cases and details are available at our [supplemental materials](https://mega.nz/file/NQkiXaYR#IZeBbbeN4xhzTQBH7bTjgah4oIoQl71d4slYVhKaIsQ)
 
 ## 7. License
 
